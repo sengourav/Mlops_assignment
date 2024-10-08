@@ -1,6 +1,9 @@
 FROM python:3.9-slim
 WORKDIR /workspace
 
+# Create the /workspace directory and set permissions
+RUN mkdir -p /workspace && chown -R root:root /workspace
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
