@@ -39,7 +39,11 @@ with mlflow.start_run():
     
     # Log metrics
     mlflow.log_metric('mse_rf', mse_rf)
-    
+    import os
+
+# Create the directory if it doesn't exist
+    if not os.path.exists("/workspace"):
+       os.makedirs("/workspace")
     # Log models
     mlflow.sklearn.log_model(lr, "Linear_Regression_Model")
     mlflow.sklearn.log_model(rf, "Random_Forest_Model")
