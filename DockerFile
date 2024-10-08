@@ -1,12 +1,28 @@
 FROM python:3.9-slim
 WORKDIR /workspace
-COPY . .
+
+# Create the /workspace directory and set permissions
+RUN mkdir -p /workspace && chown -R root:root /workspace
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-build-essential \
-libssl-dev \
-libffi-dev \
-python3-dev
-RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 80
-ENV NAME MLOpsLab
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only requirements.txt first to leverage Docker cache
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+/bin/bash: line 1: wq: command not found
+ 21:42:06 up  4:54,  1 user,  load average: 0.13, 0.17, 0.17
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+gouravse pts/1    -                11:48    9:53m  0.08s  0.03s -bash
+COPY . .
+
+# Command to run when the container starts
 CMD ["python", "train.py"]
+
